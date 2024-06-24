@@ -1,19 +1,19 @@
 const database = require("../../database");
 
 const getUsers = (req, res) => {
-  let sql = "select * from users";
+  let sql = "SELECT firstname, lastname, email, city, language FROM users";
   const sqlValues = [];
 
   if (req.query.language != null) {
-    sql += " where language = ?";
+    sql += " WHERE language = ?";
     sqlValues.push(req.query.language);
 
     if (req.query.city != null) {
-      sql += " and city = ?";
+      sql += " AND city = ?";
       sqlValues.push(req.query.city);
     }
   } else if (req.query.city != null) {
-    sql += " where city = ?";
+    sql += " WHERE city = ?";
     sqlValues.push(req.query.city);
   }
 
@@ -30,7 +30,10 @@ const getUsers = (req, res) => {
 
 const getUserById = (req, res) => {
   database
-    .query("select * from users where id = ?", [parseInt(req.params.id)])
+    .query(
+      "SELECT firstname, lastname, email, city, language FROM users WHERE id = ?",
+      [parseInt(req.params.id)]
+    )
     .then(([user]) => {
       if (user[0] != null) {
         res.status(200).json(user[0]);
@@ -45,12 +48,13 @@ const getUserById = (req, res) => {
 };
 
 const postUser = (req, res) => {
-  const { firstname, lastname, email, city, language } = req.body;
+  const { firstname, lastname, email, city, language, hashedPassword } =
+    req.body;
 
   database
     .query(
-      "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
-      [firstname, lastname, email, city, language]
+      "INSERT INTO users(firstname, lastname, email, city, language, hashedPassword) VALUES (?, ?, ?, ?, ?, ?)",
+      [firstname, lastname, email, city, language, hashedPassword]
     )
     .then(([result]) => {
       res.status(201).send({ id: result.insertId });
@@ -63,12 +67,13 @@ const postUser = (req, res) => {
 
 const updateUser = (req, res) => {
   const id = parseInt(req.params.id);
-  const { firstname, lastname, email, city, language } = req.body;
+  const { firstname, lastname, email, city, language, hashedPassword } =
+    req.body;
 
   database
     .query(
-      "UPDATE users SET firstname = ?, lastname = ?, email = ?, city = ?, language = ? WHERE id = ?",
-      [firstname, lastname, email, city, language, id]
+      "UPDATE users SET firstname = ?, lastname = ?, email = ?, city = ?, language = ?, hashedPassword = ? WHERE id = ?",
+      [firstname, lastname, email, city, language, hashedPassword, id]
     )
     .then(([result]) => {
       if (result.affectedRows === 0) {
