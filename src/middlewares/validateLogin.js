@@ -1,11 +1,8 @@
 const { body, validationResult } = require("express-validator");
 
-const validateUser = [
-  body("firstname").trim().notEmpty().isString().isLength({ max: 255 }),
-  body("lastname").trim().notEmpty().isString().isLength({ max: 255 }),
+const validateLogin = [
   body("email").trim().notEmpty().isEmail().isLength({ max: 255 }),
-  body("city").trim().notEmpty().isString().isLength({ max: 255 }),
-  body("language").trim().notEmpty().isString().isLength({ max: 255 }),
+  body("password").trim().notEmpty().isString().isLength({ max: 50 }),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -18,4 +15,4 @@ const validateUser = [
   },
 ];
 
-module.exports = validateUser;
+module.exports = validateLogin;

@@ -14,6 +14,7 @@ const {
   verifyToken,
   verifyUser,
 } = require("./middlewares/auth");
+const validateLogin = require("./middlewares/validateLogin");
 
 app.get("/api/movies", movieControllers.getMovies);
 app.get("/api/movies/:id", movieControllers.getMovieById);
@@ -24,6 +25,7 @@ app.post("/api/users", hashPassword, validateUser, userControllers.postUser);
 
 app.post(
   "/api/login",
+  validateLogin,
   userControllers.getUserByEmailWithPasswordAndPassToNext,
   verifyPassword
 );

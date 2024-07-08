@@ -1,11 +1,11 @@
 const { body, validationResult } = require("express-validator");
 
 const validateMovie = [
-  body("title").trim().notEmpty().isLength({ max: 255 }),
-  body("director").trim().notEmpty().isLength({ max: 255 }),
-  body("year").trim().notEmpty().isLength({ max: 255 }),
-  body("color").trim().notEmpty().isLength({ max: 255 }),
-  body("duration").trim().notEmpty(),
+  body("title").trim().notEmpty().isString().isLength({ max: 255 }),
+  body("director").trim().notEmpty().isString().isLength({ max: 255 }),
+  body("year").trim().notEmpty().isString().isLength({ max: 255 }),
+  body("color").trim().notEmpty().isString().isLength({ max: 255 }),
+  body("duration").trim().isInt().notEmpty(),
 
   (req, res, next) => {
     const errors = validationResult(req);
